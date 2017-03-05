@@ -1,0 +1,59 @@
+﻿<style>
+    thead td{
+        font-weight:bold;
+    }
+</style>
+<br />
+<div data-ng-app="APIModule">
+    <div ng-controller="APIController" ng-cloak>
+        <h3>All Users</h3>
+        <form>
+            <input id="name" type="text" placeholder="Enter Pet Owner's Name" ng-model="model.Name">
+            <input type="submit" value="Add" data-ng-click="addOwner()" /><br /><br />
+        </form>
+        <p>Total count:{{totalUserCount}}</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>
+                        ID
+                    </td>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        Pet's Count
+                    </td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody data-ng-repeat="u in users | Pagestart:(UserCurrentPage-1)*PerPageUserItems | limitTo:PerPageUserItems">
+                <tr>
+                    <td>
+                        {{u.UserId}}
+                    </td>
+                    <td>
+                        <a ng-href="@Url.Action("Index", "UserPage")?id={{u.UserId}}"> {{u.Name}} </a>
+                    </td>
+                    <td>
+                        {{u.PetsCount}}
+                    </td>
+                    <td>
+                        <input type="button" value="Delete" data-ng-click="deleteOwner(u.UserId)" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <button type="button" class="waves-effect waves-light btn" ng-disabled="UserCurrentPage == 1"
+                ng-click="UserCurrentPage=UserCurrentPage-1">
+            Prev
+        </button>
+        <span>Page {{UserCurrentPage}} of {{ numberOfPagesUsers() }}</span>
+
+        <button type="button" class="waves-effect waves-light btn" ng-disabled="UserCurrentPage == numberOfPagesUsers()"
+                ng-click="UserCurrentPage = UserCurrentPage+1">
+            Next
+        </button>
+    </div>
+</div>

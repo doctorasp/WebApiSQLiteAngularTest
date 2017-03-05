@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "UserPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div data-ng-app="APIModule">
+    <div ng-controller="APIController" ng-cloak>
+        <br />
+        @Html.ActionLink("Back to all Users", "Index", "Home")
+        <br /><br />
+        <form>
+            <input id="name" type="text" placeholder="Enter Pet's Name" ng-model="model.Name">
+            <input name="UserId" hidden ng-model="model.UserId" ng-init="model = {UserId:@ViewData["id"]}" type="text" />
+            <input type="submit" value="Add" data-ng-click="addPet()" /><br /><br />
+
+        </form>
+        
+        <p>Total count:{{(pets|filter:{UserId:@ViewData["id"]}).length}}</p>
+        
+        <table class="table" ng-init="$parent.petsFiltered = (pets|filter:{UserId:@ViewData["id"]}).length">
+            <thead>
+                <tr>
+                    <td>
+                        ID
+                    </td>
+                    <td>
+                        Name
+                    </td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody data-ng-repeat="p in pets | filter:{UserId:@ViewData["id"]} | Pagestart:(PetsCurrentPage-1)*PerPagePetsItems | limitTo:PerPagePetsItems">
+                <tr>
+                    <td ng-init="$parent.petsFiltered = ((pets|filter:{UserId:@ViewData["id"]}).length)">
+                        {{p.PetsId}}
+                    </td>
+                    <td>
+                        {{p.Name}}
+                    </td>
+
+                    <td>
+                        <input type="button" value="Delete" data-ng-click="deletePet(p.PetsId)" />
+                       
+                    </td>
+                    
+                </tr>
+            </tbody>
+        </table>
+         
+        <button type="button" class="btn" ng-disabled="PetsCurrentPage == 1"
+                ng-click="PetsCurrentPage=PetsCurrentPage-1">
+            Prev
+        </button>
+        <span>Page {{PetsCurrentPage}} of {{ numberOfPagesPets() }}</span>
+        <button type="button" class="btn" ng-disabled="PetsCurrentPage == numberOfPagesPets()"
+                ng-click="PetsCurrentPage = PetsCurrentPage+1">
+            Next
+        </button>
+        </div>
+    </div>
